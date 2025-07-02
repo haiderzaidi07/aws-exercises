@@ -25,8 +25,9 @@ resource "aws_vpc" "haider-tf-vpc" {
 }
 
 resource "aws_subnet" "haider-tf-subnet" {
-  vpc_id     = aws_vpc.haider-tf-vpc.id
-  cidr_block = var.subnet_cidr
+  vpc_id            = aws_vpc.haider-tf-vpc.id
+  cidr_block        = var.subnet_cidr
+  availability_zone = var.availability_zone
 
   tags = {
     Name = "haider-tf-subnet"

@@ -18,6 +18,11 @@ variable "subnet_cidr" {
   type        = string
 }
 
+variable "availability_zone" {
+  description = "Availability Zone of the subnet"
+  type        = string
+}
+
 variable "instance_type" {
   description = "EC2 instance type"
   type        = string
