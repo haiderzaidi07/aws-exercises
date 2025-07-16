@@ -101,7 +101,7 @@ resource "aws_instance" "haider-backend-1" {
 
     # Modifying the default Nginx page
     cd /usr/share/nginx/html
-    sudo sed -i 's/<title>Welcome to nginx!<\/title>/<title>Cloudelligent Task 4<\/title>/' index.html
+    sudo sed -i 's/<title>Welcome to nginx!<\/title>/<title>AWS Task 4<\/title>/' index.html
     sudo sed -i 's/<h1>Welcome to nginx!<\/h1>/<h1>Backend Server 1<\/h1>/' index.html
   EOF
 
@@ -137,7 +137,7 @@ resource "aws_instance" "haider-backend-2" {
     sudo systemctl start nginx
 
     cd /usr/share/nginx/html
-    sudo sed -i 's/<title>Welcome to nginx!<\/title>/<title>Cloudelligent Task 4<\/title>/' index.html
+    sudo sed -i 's/<title>Welcome to nginx!<\/title>/<title>AWS Task 4<\/title>/' index.html
     sudo sed -i 's/<h1>Welcome to nginx!<\/h1>/<h1>Backend Server 2<\/h1>/' index.html
   EOF
 
