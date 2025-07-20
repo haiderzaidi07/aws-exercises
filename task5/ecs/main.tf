@@ -12,8 +12,8 @@ resource "aws_ecs_task_definition" "haider-tf-td-nginx" {
 
   container_definitions = jsonencode([
     {
-      name      = var.container_name
-      image     = var.container_image
+      name      = "${var.container_name}"
+      image     = "${var.container_image}"
       essential = true
       portMappings = [
         {
@@ -32,7 +32,7 @@ resource "aws_ecs_service" "haider-tf-ecs-service" {
   desired_count    = var.tasks_count
   cluster          = aws_ecs_cluster.haider-tf-ecs-cluster.id
   task_definition  = aws_ecs_task_definition.haider-tf-td-nginx.arn
-  
+
   network_configuration {
     subnets          = var.subnet_ids
     security_groups  = [var.security_group_id]

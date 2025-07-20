@@ -4,5 +4,5 @@ variable "task_execution_role_name" {
 }
 
 variable "task_execution_role_policy_arn" {
-  type        = string
+  type = string
 }

@@ -7,8 +7,8 @@ variable "task_definition_family" {
 }
 
 variable "task_execution_role_arn" {
-  type = string
-    description = "ARN of the ECS task execution role"
+  type        = string
+  description = "ARN of the ECS task execution role"
 }
 
 variable "container_name" {
@@ -16,7 +16,7 @@ variable "container_name" {
 }
 
 variable "container_image" {
-  type = string
+  type        = string
   description = "Docker image to be used in the ECS task"
 }
 
@@ -29,11 +29,11 @@ variable "tasks_count" {
 }
 
 variable "subnet_ids" {
-  type = list(string)
+  type        = list(string)
   description = "List of subnet IDs for the ECS service"
 }
 
 variable "security_group_id" {
-  type = string
+  type        = string
   description = "ID of the security group for the ECS service"
 }
