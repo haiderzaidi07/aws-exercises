@@ -52,6 +52,14 @@ module "iam" {
   cloud_watch_logs_full_access_policy_arn = var.cloud_watch_logs_full_access_policy_arn
 }
 
+module "ecr" {
+  source = "./ecr"
+
+  profile        = var.profile
+  region         = var.region
+  container_name = var.container_name
+}
+
 module "alb" {
   source = "./alb"
 
@@ -67,7 +75,7 @@ module "ecs" {
   task_definition_family  = var.task_definition_family
   task_execution_role_arn = module.iam.execution_role_arn
   container_name          = var.container_name
-  container_image         = var.container_image
+  container_image         = module.ecr.image_uri
   efs_volume_id           = module.efs.efs_id
   service_name            = var.service_name
   tasks_count             = var.tasks_count
@@ -75,5 +83,5 @@ module "ecs" {
   subnet_ids              = module.vpc.public_subnet_ids
   target_group_arn        = module.alb.target_group_arn
 
-  depends_on = [module.sg, module.efs, module.alb]
+  depends_on = [module.sg, module.efs, module.ecr, module.alb]
 }
