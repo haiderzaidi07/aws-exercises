@@ -5,6 +5,6 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - aws --version
-      - pwd
+      - cd task8/
       - ls -la
       
