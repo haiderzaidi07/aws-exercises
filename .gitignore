@@ -3,3 +3,4 @@
 *.tfstate.*
 *.tfvars
 task2/wordpress-setup.txt
+task8/buildspeclogs.txt

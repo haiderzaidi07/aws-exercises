@@ -1,0 +1,10 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Changing directory to task8 and verifying contents...
+      - cd task9/
+      - ls -la
+      - echo Logging in to Amazon ECR...
+      - aws --version
