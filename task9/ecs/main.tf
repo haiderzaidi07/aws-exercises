@@ -42,7 +42,7 @@ resource "aws_ecs_task_definition" "haider-tf-td-nginx-custom" {
   container_definitions = jsonencode([
     {
       name      = "${var.container_name}"
-      image     = "${var.container_image}"
+      image     = "${var.container_image}:latest"
       essential = true
       cpu       = 512
       memory    = 512

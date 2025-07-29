@@ -50,57 +50,57 @@ module "iam" {
   codebuild_project_arn                        = var.codebuild_project_arn
 }
 
-# module "ecr" {
-#   source = "./ecr"
-# 
-#   profile        = var.profile
-#   region         = var.region
-#   container_name = var.container_name
-# }
+module "ecr" {
+  source = "./ecr"
 
-# module "alb" {
-#   source = "./alb"
-# 
-#   security_group_id = module.sg.alb_sg_id
-#   subnet_ids        = module.vpc.subnet_ids
-#   vpc_id            = module.vpc.vpc_id
-# 
-#   depends_on = [module.vpc]
-# }
-# 
-# module "asg" {
-#   source = "./asg"
-# 
-#   instance_lt_name         = var.instance_lt_name
-#   image_ami_id             = var.image_ami_id
-#   instance_type            = var.instance_type
-#   key_name                 = var.key_name
-#   security_group_id        = module.sg.ecs_sg_id
-#   cluster_name             = var.cluster_name
-#   subnet_ids               = module.vpc.subnet_ids
-#   ecs_instance_profile_arn = module.iam.ecs_instance_profile_arn
-# 
-#   depends_on = [module.sg]
-# }
-# 
-# module "ecs" {
-#   source = "./ecs"
-# 
-#   cluster_name            = var.cluster_name
-#   asg_arn                 = module.asg.asg_arn
-#   task_definition_family  = var.task_definition_family
-#   task_execution_role_arn = module.iam.execution_role_arn
-#   container_name          = var.container_name
-#   container_image         = "504649076991.dkr.ecr.us-east-2.amazonaws.com/haider-nginx:d1cdfc8" # module.ecr.image_uri
-#   service_name            = var.service_name
-#   tasks_count             = var.tasks_count
-#   cluster_id              = module.asg.cluster_id
-#   security_group_id       = module.sg.ecs_sg_id
-#   subnet_ids              = module.vpc.subnet_ids
-#   target_group_arn        = module.alb.target_group_arn
-# 
-#   depends_on = [module.iam, module.sg, module.asg, module.alb] # module.ecr]
-# }
+  profile        = var.profile
+  region         = var.region
+  container_name = var.container_name
+}
+
+module "alb" {
+  source = "./alb"
+
+  security_group_id = module.sg.alb_sg_id
+  subnet_ids        = module.vpc.subnet_ids
+  vpc_id            = module.vpc.vpc_id
+
+  depends_on = [module.vpc]
+}
+
+module "asg" {
+  source = "./asg"
+
+  instance_lt_name         = var.instance_lt_name
+  image_ami_id             = var.image_ami_id
+  instance_type            = var.instance_type
+  key_name                 = var.key_name
+  security_group_id        = module.sg.ecs_sg_id
+  cluster_name             = var.cluster_name
+  subnet_ids               = module.vpc.subnet_ids
+  ecs_instance_profile_arn = module.iam.ecs_instance_profile_arn
+
+  depends_on = [module.sg]
+}
+
+module "ecs" {
+  source = "./ecs"
+
+  cluster_name            = var.cluster_name
+  asg_arn                 = module.asg.asg_arn
+  task_definition_family  = var.task_definition_family
+  task_execution_role_arn = module.iam.execution_role_arn
+  container_name          = var.container_name
+  container_image         = module.ecr.image_uri
+  service_name            = var.service_name
+  tasks_count             = var.tasks_count
+  cluster_id              = module.asg.cluster_id
+  security_group_id       = module.sg.ecs_sg_id
+  subnet_ids              = module.vpc.subnet_ids
+  target_group_arn        = module.alb.target_group_arn
+
+  depends_on = [module.iam, module.sg, module.ecr, module.asg, module.alb]
+}
 
 module "codebuild" {
   source = "./codebuild"
@@ -116,5 +116,5 @@ module "codepipeline" {
   service_role      = module.iam.codepipeline_service_role_arn
   codeconnection_id = var.codeconnection_id
 
-  depends_on = [module.iam, module.codebuild]
+  depends_on = [module.codebuild, module.ecs]
 }

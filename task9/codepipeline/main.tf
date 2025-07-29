@@ -43,6 +43,24 @@ resource "aws_codepipeline" "haider-tf-pipeline" {
       }
     }
   }
+
+  stage {
+    name = "Deploy"
+
+    action {
+      name             = "Deploy"
+      category         = "Deploy"
+      owner            = "AWS"
+      provider         = "ECS"
+      input_artifacts  = ["build_output"]
+      version          = "1"
+
+      configuration = {
+        ClusterName = "haider-tf-ecs-ec2-cluster"
+        ServiceName = "haider-tf-ecs-ec2-service"
+      }
+    }
+  }
   
   depends_on = [ aws_s3_bucket.haider-tf-codepipeline-bucket ]
 }
