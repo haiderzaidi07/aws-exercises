@@ -6,3 +6,4 @@ phases:
       - echo Changing directory to task12 and verifying contents...
       - cd task12/
       - ls -la
+      - zip
