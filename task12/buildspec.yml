@@ -15,7 +15,9 @@ phases:
       - npm -v
   build:
     commands:
-    - pwd
-    #  - npm install
-    #  - zip -r eb-nodejs.zip ./*
-    #  - ls -la
+    - cd app/
+    - echo Installing dependencies...
+    - npm install
+    - echo Creating zip file for deployment...
+    - zip -r eb-nodejs.zip ./*
+    - ls -la
