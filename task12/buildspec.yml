@@ -6,5 +6,6 @@ phases:
       - echo Changing directory to task12 and verifying contents...
       - cd task12/
       - ls -la
-      - sudo apt install zip
-      - zip
+      - zip -v
+      - apt install zip
+      - zip -v
