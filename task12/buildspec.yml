@@ -1,11 +1,14 @@
 version: 0.2
 
 phases:
+  install:
+    runtime-versions:
+      nodejs: 22.x
   pre_build:
     commands:
       - echo Changing directory to task12 and verifying contents...
       - cd task12/
       - ls -la
       - zip -v
-      - apt install zip
-      - zip -v
+      - node -v
+      - npm -v
