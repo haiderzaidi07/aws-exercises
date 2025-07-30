@@ -12,9 +12,3 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on Port: ${PORT}`);
 });
-
-// Instructions to create a zip file for deployment
-// 1. npm install
-// 2. sudo apt update
-// 3. sudo apt install zip
-// 4. zip -r haider-eb-nodejs.zip *

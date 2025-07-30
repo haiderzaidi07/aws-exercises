@@ -3,17 +3,19 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      nodejs: latest
+      nodejs: 22
   pre_build:
     commands:
       - echo Changing directory to task12 and verifying contents...
       - cd task12/
-      - echo Verifing installed packages...
+      - ls -la
+      - echo Verifying packages...
       - zip -v
       - node -v
       - npm -v
   build:
     commands:
-      - npm install
-      - zip -r eb-nodejs.zip ./*
-      - ls -la
+    - pwd
+    #  - npm install
+    #  - zip -r eb-nodejs.zip ./*
+    #  - ls -la
