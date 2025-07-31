@@ -27,6 +27,5 @@ phases:
       - echo Build completed on `date`
       - echo Moving zip file to src directory...
       - mv eb-nodejs.zip ../../
-      - pwd
 artifacts:
-    files: eb-nodejs.zip
+    files: **/*.zip
