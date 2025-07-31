@@ -28,4 +28,5 @@ phases:
       - echo Moving zip file to src directory...
       - mv eb-nodejs.zip ../../
 artifacts:
-    files: **/*.zip
+    files: 
+      - "**/*.zip"
