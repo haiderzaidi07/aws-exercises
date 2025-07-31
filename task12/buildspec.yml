@@ -19,13 +19,13 @@ phases:
     - cd app/
     - echo Installing dependencies...
     - npm install
-    - echo Creating zip file for deployment and verifying...
-    - zip -r eb-nodejs.zip ./*
+   # - echo Creating zip file for deployment and verifying...
+   # - zip -r eb-nodejs.zip ./*
     - ls -la
   post_build:
     commands:
       - echo Build completed on `date`
-      - echo Moving zip file to src directory...
-      - mv eb-nodejs.zip ../../
+    #  - echo Moving zip file to src directory...
+    #  - mv eb-nodejs.zip ../../
 artifacts:
-    files: eb-nodejs.zip
+    files: "./*"
