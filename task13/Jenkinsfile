@@ -55,6 +55,7 @@ pipeline {
                         cat task-definition.json
                         sed -i 's/\\(:[^"]*\\)latest/\\1test/' task-definition.json
                         cat task-definition.json
+                        aws ecs register-task-definition --cli-input-json file://task-definition.json
                     '''
                 }
             }
