@@ -9,6 +9,7 @@ pipeline {
                     ls -la
                     echo "Checking if AWS CLI is installed"
                     aws --version
+                    aws ec2 describe-instances
                 '''
             }
         }
