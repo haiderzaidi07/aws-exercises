@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        AWS_REGION = 'us-east-2'
+        REPOSITORY_URI = '504649076991.dkr.ecr.us-east-2.amazonaws.com/haider-jenkins'
+    }
+
     stages {
         stage('Verify') {
             steps {
@@ -13,16 +18,30 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build and Push') {
             steps {
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'haider-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     sh '''
+                        set -e
                         cd task13/
-                        aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 504649076991.dkr.ecr.us-east-2.amazonaws.com
+
+                        echo "Logging into Amazon ECR..."
+                        aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
+
+                        echo "Determining Git commit hash for tagging..."
+                        COMMIT_HASH=$(git rev-parse --short=7 HEAD)
+                        echo "Using COMMIT_HASH: $COMMIT_HASH"
+
+                        echo "Building Docker image..."
                         docker build -t haider-jenkins .
-                        docker images
-                        docker tag haider-jenkins:latest 504649076991.dkr.ecr.us-east-2.amazonaws.com/haider-jenkins:latest
-                        docker push 504649076991.dkr.ecr.us-east-2.amazonaws.com/haider-jenkins:latest
+
+                        echo "Tagging Docker image with 'latest' and commit hash..."
+                        docker tag haider-jenkins:latest $REPOSITORY_URI:latest
+                        docker tag haider-jenkins:latest $REPOSITORY_URI:$COMMIT_HASH
+
+                        echo "Pushing Docker images to ECR..."
+                        docker push $REPOSITORY_URI:latest
+                        docker push $REPOSITORY_URI:$COMMIT_HASH
                     '''
                 }
             }
