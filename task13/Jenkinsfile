@@ -5,12 +5,23 @@ pipeline {
         stage('Verify') {
             steps {
                 sh '''
-                    echo "Verifying contents from Haider's repo"
-                    ls -la
+                    echo "Verifying contents of task13"
+                    ls -la task13/
                     echo "Checking if AWS CLI is installed"
                     aws --version
-                    aws ec2 describe-instances
                 '''
+            }
+        }
+
+        stage('Build') {
+            steps {
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'haider-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    sh '''
+                        cd task13/
+                        ls -la
+                        aws ecr list-images --repository-name haider-nginx
+                    '''
+                }
             }
         }
     }
