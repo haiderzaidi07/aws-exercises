@@ -14,6 +14,7 @@ pipeline {
                     ls -la task13/
                     echo "Checking if AWS CLI is installed"
                     aws --version
+                    cat task-definition.json
                 '''
             }
         }
