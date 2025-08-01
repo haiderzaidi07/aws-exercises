@@ -1,0 +1,14 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Verify') {
+            steps {
+                sh '''
+                    echo "Verifying contents from Haider's repo"
+                    ls -la
+                '''
+            }
+        }
+    }
+}
