@@ -7,6 +7,8 @@ pipeline {
                 sh '''
                     echo "Verifying contents from Haider's repo"
                     ls -la
+                    echo "Checking if AWS CLI is installed"
+                    aws --version
                 '''
             }
         }
