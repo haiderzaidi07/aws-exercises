@@ -18,8 +18,11 @@ pipeline {
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'haider-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     sh '''
                         cd task13/
-                        ls -la
-                        aws ecr list-images --repository-name haider-nginx
+                        aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 504649076991.dkr.ecr.us-east-2.amazonaws.com
+                        docker build -t haider-jenkins .
+                        docker images
+                        docker tag haider-jenkins:latest 504649076991.dkr.ecr.us-east-2.amazonaws.com/haider-jenkins:latest
+                        docker push 504649076991.dkr.ecr.us-east-2.amazonaws.com/haider-jenkins:latest
                     '''
                 }
             }
