@@ -53,7 +53,7 @@ pipeline {
                     sh '''
                         aws ecs describe-task-definition --task-definition haider-td-jenkins > task-definition.json
                         cat task-definition.json
-                        sed -i 's/\(:[^"]*\)latest/\1test/' task-definition.json
+                        sed -i 's/\\(:[^"]*\\)latest/\\1test/' task-definition.json
                         cat task-definition.json
                     '''
                 }
