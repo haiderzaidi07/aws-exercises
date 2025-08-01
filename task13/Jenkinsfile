@@ -51,7 +51,8 @@ pipeline {
             steps {
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'haider-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     sh '''
-                        aws ecs describe-task-definition --task-definition haider-td-jenkins
+                        aws ecs describe-task-definition --task-definition haider-td-jenkins > task-definitions.json
+                        cat task-definitions.json
                     '''
                 }
             }
