@@ -18,30 +18,40 @@ pipeline {
             }
         }
 
-        stage('Build and Push') {
+        // stage('Build and Push') {
+        //     steps {
+        //         withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'haider-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+        //             sh '''
+        //                 set -e
+        //                 cd task13/
+
+        //                 echo "Logging into Amazon ECR..."
+        //                 aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
+
+        //                 echo "Determining Git commit hash for tagging..."
+        //                 COMMIT_HASH=$(git rev-parse --short=7 HEAD)
+        //                 echo "Using COMMIT_HASH: $COMMIT_HASH"
+
+        //                 echo "Building Docker image..."
+        //                 docker build -t haider-jenkins .
+
+        //                 echo "Tagging Docker image with 'latest' and commit hash..."
+        //                 docker tag haider-jenkins:latest $REPOSITORY_URI:latest
+        //                 docker tag haider-jenkins:latest $REPOSITORY_URI:$COMMIT_HASH
+
+        //                 echo "Pushing Docker images to ECR..."
+        //                 docker push $REPOSITORY_URI:latest
+        //                 docker push $REPOSITORY_URI:$COMMIT_HASH
+        //             '''
+        //         }
+        //     }
+        // }
+
+        stage('Deploy') {
             steps {
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'haider-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     sh '''
-                        set -e
-                        cd task13/
-
-                        echo "Logging into Amazon ECR..."
-                        aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
-
-                        echo "Determining Git commit hash for tagging..."
-                        COMMIT_HASH=$(git rev-parse --short=7 HEAD)
-                        echo "Using COMMIT_HASH: $COMMIT_HASH"
-
-                        echo "Building Docker image..."
-                        docker build -t haider-jenkins .
-
-                        echo "Tagging Docker image with 'latest' and commit hash..."
-                        docker tag haider-jenkins:latest $REPOSITORY_URI:latest
-                        docker tag haider-jenkins:latest $REPOSITORY_URI:$COMMIT_HASH
-
-                        echo "Pushing Docker images to ECR..."
-                        docker push $REPOSITORY_URI:latest
-                        docker push $REPOSITORY_URI:$COMMIT_HASH
+                        aws ecs list-task-definitions
                     '''
                 }
             }
