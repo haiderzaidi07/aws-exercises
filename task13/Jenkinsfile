@@ -42,7 +42,6 @@ pipeline {
         //                 echo "Pushing Docker images to ECR..."
         //                 docker push $REPOSITORY_URI:latest
         //                 docker push $REPOSITORY_URI:$COMMIT_HASH
-        //  aws ecs register-task-definition --cli-input-json file://task-definition.json
         //             '''
         //         }
         //     }
@@ -58,6 +57,7 @@ pipeline {
 
                         sed -i 's/\\(:[^"]*\\)latest/\\1test/' task-definition.json
                         cat task-definition.json                        
+                        aws ecs register-task-definition --cli-input-json file://task-definition.json
                     '''
                 }
             }
