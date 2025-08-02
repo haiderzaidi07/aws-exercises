@@ -67,7 +67,15 @@ pipeline {
                         sed -i "s/\\(:[^\\\"]*\\)latest/\\1$COMMIT_HASH/" task-definition.json
                         cat task-definition.json
 
+                        echo "Registering new task definition with updated image tag..."
                         aws ecs register-task-definition --cli-input-json file://task-definition.json
+
+                        echo "Updating ECS service to use the new task definition..."
+                        aws ecs update-service \
+                            --cluster haider-cluster \
+                            --service haider-td-jenkins-service-zb6375ca \
+                            --task-definition haider-td-jenkins \
+                            --force-new-deployment
                     '''
                 }
             }
