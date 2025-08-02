@@ -9,12 +9,14 @@ phases:
       - echo Changing directory to task12/app and verifying contents...
       - cd task12/app
       - ls -la
-  build:
-    commands:
-      - echo Build started on `date`
-      - echo Installing dependencies...
-      - npm install
-      - echo Build completed on `date`
+      - node -v
+      - npm -v
+#  build:
+#    commands:
+#      - echo Build started on `date`
+#      - echo Installing dependencies...
+#      - npm install
+#      - echo Build completed on `date`
 # artifacts:
 #   base-directory: task12/app
 #   files:
