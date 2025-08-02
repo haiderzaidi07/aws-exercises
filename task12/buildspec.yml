@@ -15,7 +15,7 @@ phases:
       - echo Installing dependencies...
       - npm install
       - echo Build completed on `date`
-artifacts:
-  base-directory: task12/app
-  files:
-    - '**/*'
+# artifacts:
+#   base-directory: task12/app
+#   files:
+#     - '**/*'
