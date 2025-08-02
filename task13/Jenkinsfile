@@ -7,6 +7,16 @@ pipeline {
     }
 
     stages {
+        stage('Initialize') {
+            steps {
+                script {
+                    // Set COMMIT_HASH as environment variable
+                    env.COMMIT_HASH = sh(script: 'git rev-parse --short=7 HEAD', returnStdout: true).trim()
+                    echo "COMMIT_HASH set to: ${env.COMMIT_HASH}"
+                }
+            }
+        }
+
         stage('Verify') {
             steps {
                 sh '''
@@ -18,34 +28,32 @@ pipeline {
             }
         }
 
-        // stage('Build and Push') {
-        //     steps {
-        //         withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'haider-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-        //             sh '''
-        //                 set -e
-        //                 cd task13/
+        stage('Build and Push') {
+            steps {
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'haider-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    sh '''
+                        set -e
+                        cd task13/
 
-        //                 echo "Logging into Amazon ECR..."
-        //                 aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
+                        echo "Logging into Amazon ECR..."
+                        aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
 
-        //                 echo "Determining Git commit hash for tagging..."
-        //                 COMMIT_HASH=$(git rev-parse --short=7 HEAD)
-        //                 echo "Using COMMIT_HASH: $COMMIT_HASH"
+                        echo "Using COMMIT_HASH: $COMMIT_HASH"
 
-        //                 echo "Building Docker image..."
-        //                 docker build -t haider-jenkins .
+                        echo "Building Docker image..."
+                        docker build -t haider-jenkins .
 
-        //                 echo "Tagging Docker image with 'latest' and commit hash..."
-        //                 docker tag haider-jenkins:latest $REPOSITORY_URI:latest
-        //                 docker tag haider-jenkins:latest $REPOSITORY_URI:$COMMIT_HASH
+                        echo "Tagging Docker image with 'latest' and commit hash..."
+                        docker tag haider-jenkins:latest $REPOSITORY_URI:latest
+                        docker tag haider-jenkins:latest $REPOSITORY_URI:$COMMIT_HASH
 
-        //                 echo "Pushing Docker images to ECR..."
-        //                 docker push $REPOSITORY_URI:latest
-        //                 docker push $REPOSITORY_URI:$COMMIT_HASH
-        //             '''
-        //         }
-        //     }
-        // }
+                        echo "Pushing Docker images to ECR..."
+                        docker push $REPOSITORY_URI:latest
+                        docker push $REPOSITORY_URI:$COMMIT_HASH
+                    '''
+                }
+            }
+        }
 
         stage('Deploy') {
             steps {
@@ -55,8 +63,10 @@ pipeline {
                         cd task13/
                         cat task-definition.json
 
-                        sed -i 's/\\(:[^"]*\\)latest/\\1test/' task-definition.json
-                        cat task-definition.json                        
+                        echo "Replacing 'latest' tag with commit hash: $COMMIT_HASH"
+                        sed -i "s/\\(:[^\\\"]*\\)latest/\\1$COMMIT_HASH/" task-definition.json
+                        cat task-definition.json
+
                         aws ecs register-task-definition --cli-input-json file://task-definition.json
                     '''
                 }
