@@ -11,13 +11,13 @@ phases:
       - ls -la
       - node -v
       - npm -v
-#  build:
-#    commands:
-#      - echo Build started on `date`
-#      - echo Installing dependencies...
-#      - npm install
-#      - echo Build completed on `date`
-# artifacts:
-#   base-directory: task12/app
-#   files:
-#     - '**/*'
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Installing dependencies...
+      - npm install
+      - echo Build completed on `date`
+artifacts:
+  base-directory: task12/app
+  files:
+    - '**/*'
