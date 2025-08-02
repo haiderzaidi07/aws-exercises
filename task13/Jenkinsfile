@@ -14,19 +14,20 @@ pipeline {
                     ls -la task13/
                     echo "Checking if AWS CLI is installed"
                     aws --version
-                    cat task-definition1.json
                 '''
             }
         }
 
-        // stage('Build and Push') {
-        //     steps {
-        //         withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'haider-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-        //             sh '''
-        //                 set -e
-        //                 cd task13/
+        stage('Build and Push') {
+            steps {
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'haider-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                        sh '''
+                            set -e
+                            cd task13/
 
-        //                 echo "Logging into Amazon ECR..."
+                            echo "Logging into Amazon ECR..."
+                        '''
+        //              sh '''
         //                 aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
 
         //                 echo "Determining Git commit hash for tagging..."
@@ -43,20 +44,20 @@ pipeline {
         //                 echo "Pushing Docker images to ECR..."
         //                 docker push $REPOSITORY_URI:latest
         //                 docker push $REPOSITORY_URI:$COMMIT_HASH
-        //                 aws ecs register-task-definition --cli-input-json file://task-definition.json
+        //                  aws ecs register-task-definition --cli-input-json file://task-definition.json
         //             '''
-        //         }
-        //     }
-        // }
+                }
+            }
+        }
 
         stage('Deploy') {
             steps {
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'haider-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     sh '''
-                        cat task-definition1.json
-                        sed -i 's/\\(:[^"]*\\)latest/\\1test/' task-definition1.json
-                        cat task-definition1.json
-                        
+                        cat task-definition.json
+                        sed -i 's/\\(:[^"]*\\)latest/\\1test/' task-definition.json
+                        cat task-definition.json
+        
                     '''
                 }
             }
