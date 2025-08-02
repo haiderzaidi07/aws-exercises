@@ -14,7 +14,7 @@ pipeline {
                     ls -la task13/
                     echo "Checking if AWS CLI is installed"
                     aws --version
-                    cat task-definition.json
+                    cat task-definition1.json
                 '''
             }
         }
@@ -43,6 +43,7 @@ pipeline {
         //                 echo "Pushing Docker images to ECR..."
         //                 docker push $REPOSITORY_URI:latest
         //                 docker push $REPOSITORY_URI:$COMMIT_HASH
+        //                 aws ecs register-task-definition --cli-input-json file://task-definition.json
         //             '''
         //         }
         //     }
@@ -52,10 +53,10 @@ pipeline {
             steps {
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'haider-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     sh '''
-                        cat task-definition.json
-                        sed -i 's/\\(:[^"]*\\)latest/\\1test/' task-definition.json
-                        cat task-definition.json
-                        aws ecs register-task-definition --cli-input-json file://task-definition.json
+                        cat task-definition1.json
+                        sed -i 's/\\(:[^"]*\\)latest/\\1test/' task-definition1.json
+                        cat task-definition1.json
+                        
                     '''
                 }
             }
