@@ -3,7 +3,7 @@ resource "aws_codepipeline" "haider-tf-pipeline" {
   role_arn = var.service_role
 
   artifact_store {
-    location = aws_s3_bucket.haider-tf-codepipeline-bucket.bucket
+    location = var.artifact_store_location
     type     = "S3"
   }
 
@@ -44,49 +44,26 @@ resource "aws_codepipeline" "haider-tf-pipeline" {
     }
   }
 
-  #stage {
-  #  name = "Deploy"
-  #
-  #  action {
-  #    name             = "Deploy"
-  #    category         = "Deploy"
-  #    owner            = "AWS"
-  #    provider         = "ECS"
-  #    input_artifacts  = ["build_output"]
-  #    version          = "1"
-  #
-  #    configuration = {
-  #      ClusterName = "haider-tf-ecs-ec2-cluster"
-  #      ServiceName = "haider-tf-ecs-ec2-service"
-  #    }
-  #  }
-  #}
+  stage {
+    name = "Deploy"
 
-  depends_on = [aws_s3_bucket.haider-tf-codepipeline-bucket]
+    action {
+      name            = "Deploy"
+      category        = "Deploy"
+      owner           = "AWS"
+      provider        = "ElasticBeanstalk"
+      input_artifacts = ["build_output"]
+      version         = "1"
+
+      configuration = {
+        ApplicationName = var.application_name
+        EnvironmentName = var.environment_name
+      }
+    }
+  }
 }
 
 # resource "aws_codestarconnections_connection" "example" {
 #   name          = "example-connection"
 #   provider_type = "GitHub"
 # }
-
-resource "aws_s3_bucket" "haider-tf-codepipeline-bucket" {
-  bucket = "haider-tf-codepipeline-bucket"
-
-  lifecycle {
-    prevent_destroy = false
-  }
-
-  force_destroy = true
-}
-
-resource "aws_s3_bucket_public_access_block" "codepipeline_bucket_pab" {
-  bucket = aws_s3_bucket.haider-tf-codepipeline-bucket.id
-
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-
-  depends_on = [aws_s3_bucket.haider-tf-codepipeline-bucket]
-}

@@ -6,7 +6,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.get('/', (req, res) => {
-  res.send('Hello Elastic Beanstalk from CodePipeline!');
+  res.send('Hello Elastic Beanstalk from CodeBuild and CodePipeline!');
 });
 
 app.listen(PORT, () => {

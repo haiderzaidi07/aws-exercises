@@ -6,6 +6,10 @@ variable "profile" {
   type = string
 }
 
+variable "bucket_name" {
+  type = string
+}
+
 variable "service_role_name" {
   type = string
 }
@@ -43,10 +47,6 @@ variable "ec2_instance_profile_name" {
 }
 
 variable "codebuild_log_group_arn" {
-  type = string
-}
-
-variable "s3_bucket_arn" {
   type = string
 }
 
