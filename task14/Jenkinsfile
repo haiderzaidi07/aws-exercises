@@ -1,0 +1,58 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_REGION = 'us-east-2'
+        REPOSITORY_URI = '504649076991.dkr.ecr.us-east-2.amazonaws.com/haider-tf-jenkins'
+    }
+
+    stages {
+        stage('Initialize') {
+            steps {
+                script {
+                    // Set COMMIT_HASH as environment variable
+                    env.COMMIT_HASH = sh(script: 'git rev-parse --short=7 HEAD', returnStdout: true).trim()
+                    echo "COMMIT_HASH set to: ${env.COMMIT_HASH}"
+                }
+            }
+        }
+
+        stage('Verify') {
+            steps {
+                sh '''
+                    echo "Verifying contents of task14"
+                    ls -la task14/
+                    echo "Checking if AWS CLI is installed"
+                    aws --version
+                '''
+            }
+        }
+
+        stage('Build and Push') {
+            steps {
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'haider-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    sh '''
+                        set -e
+                        cd task14/
+
+                        echo "Logging into Amazon ECR..."
+                        aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
+
+                        echo "Using COMMIT_HASH: $COMMIT_HASH"
+
+                        echo "Building Docker image..."
+                        docker build -t haider-jenkins .
+
+                        echo "Tagging Docker image with 'latest' and commit hash..."
+                        docker tag haider-jenkins:latest $REPOSITORY_URI:latest
+                        docker tag haider-jenkins:latest $REPOSITORY_URI:$COMMIT_HASH
+
+                        echo "Pushing Docker images to ECR..."
+                        docker push $REPOSITORY_URI:latest
+                        docker push $REPOSITORY_URI:$COMMIT_HASH
+                    '''
+                }
+            }
+        }
+    }
+}
