@@ -47,3 +47,8 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy_attachment"
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = var.task_execution_role_policy_arn
 }
+
+resource "aws_iam_role_policy_attachment" "cloudwatch_logs_full_access_policy_attachment" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = var.cloudwatch_logs_full_access_policy_arn
+}

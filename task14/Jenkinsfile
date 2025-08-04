@@ -54,5 +54,31 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy') {
+            steps {
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'haider-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    sh '''
+                        set -e
+                        cd task14/
+                        cat task-definition.json
+
+                        echo "Replacing 'latest' tag with commit hash: $COMMIT_HASH"
+                        sed -i "s/\\(:[^\\\"]*\\)latest/\\1$COMMIT_HASH/" task-definition.json
+                        cat task-definition.json
+
+                        echo "Registering new task definition with updated image tag..."
+                        aws ecs register-task-definition --cli-input-json file://task-definition.json
+
+                        echo "Updating ECS service to use the new task definition..."
+                        aws ecs update-service \
+                            --cluster haider-tf-cluster \
+                            --service haider-tf-ecs-service \
+                            --task-definition haider-tf-td-nginx \
+                            --force-new-deployment
+                    '''
+                }
+            }
+        }
     }
 }

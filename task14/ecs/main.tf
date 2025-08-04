@@ -1,4 +1,4 @@
-resource "aws_ecs_cluster" "haider-tf-ecs-cluster" {
+resource "aws_ecs_cluster" "haider-tf-cluster" {
   name = var.cluster_name
 }
 
@@ -15,14 +15,30 @@ resource "aws_ecs_task_definition" "haider-tf-td-nginx" {
       name      = "${var.container_name}"
       image     = "${var.container_image}"
       essential = true
+      cpu       = 512
+      memory    = 1024
       portMappings = [
         {
           containerPort = 80
           hostPort      = 80
         }
       ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = "/ecs/${var.task_definition_family}"
+          awslogs-create-group  = "true"
+          awslogs-region        = "us-east-2"
+          awslogs-stream-prefix = "ecs"
+        }
+      }
     }
   ])
+
+  runtime_platform {
+    cpu_architecture        = "X86_64"
+    operating_system_family = "LINUX"
+  }
 }
 
 resource "aws_ecs_service" "haider-tf-ecs-service" {
@@ -30,7 +46,7 @@ resource "aws_ecs_service" "haider-tf-ecs-service" {
   launch_type      = "FARGATE"
   platform_version = "LATEST"
   desired_count    = var.tasks_count
-  cluster          = aws_ecs_cluster.haider-tf-ecs-cluster.id
+  cluster          = aws_ecs_cluster.haider-tf-cluster.id
   task_definition  = aws_ecs_task_definition.haider-tf-td-nginx.arn
 
   network_configuration {

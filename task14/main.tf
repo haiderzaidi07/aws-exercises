@@ -59,18 +59,18 @@ module "ecr" {
   region  = var.region
 }
 
-# module "ecs" {
-#   source = "./ecs"
-# 
-#   cluster_name            = var.cluster_name
-#   task_definition_family  = var.task_definition_family
-#   task_execution_role_arn = module.iam.execution_role_arn
-#   container_name          = var.container_name
-#   container_image         = module.ecr.image_uri
-#   service_name            = var.service_name
-#   tasks_count             = var.tasks_count
-#   security_group_id       = module.sg.security_group_id
-#   subnet_ids              = [module.vpc.subnet_id]
-# 
-#   depends_on = [module.iam, module.sg, module.ecr]
-# }
+module "ecs" {
+  source = "./ecs"
+
+  cluster_name            = var.cluster_name
+  task_definition_family  = var.task_definition_family
+  task_execution_role_arn = module.iam.execution_role_arn
+  container_name          = var.container_name
+  container_image         = module.ecr.image_uri
+  service_name            = var.service_name
+  tasks_count             = var.tasks_count
+  security_group_id       = module.sg.security_group_id
+  subnet_ids              = [module.vpc.subnet_id]
+
+  depends_on = [module.iam, module.sg, module.ecr]
+}
