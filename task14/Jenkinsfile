@@ -73,7 +73,7 @@ pipeline {
                         echo "Updating ECS service to use the new task definition..."
                         aws ecs update-service \
                             --cluster haider-tf-cluster \
-                            --service haider-tf-cluster \
+                            --service haider-tf-ecs-service \
                             --task-definition haider-tf-td-nginx \
                             --force-new-deployment
                     '''

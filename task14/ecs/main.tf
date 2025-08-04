@@ -42,7 +42,7 @@ resource "aws_ecs_task_definition" "haider-tf-td-nginx" {
 }
 
 resource "aws_ecs_service" "haider-tf-ecs-service" {
-  name             = var.cluster_name
+  name             = var.service_name
   launch_type      = "FARGATE"
   platform_version = "LATEST"
   desired_count    = var.tasks_count
