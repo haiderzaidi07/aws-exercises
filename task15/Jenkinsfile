@@ -34,7 +34,9 @@ pipeline {
 
                 sshagent(['nodejs-deployment-ec2']) {
                     sh '''
-                        
+                        echo "Copying files to EC2..."
+                        scp -o StrictHostKeyChecking=no ./nodejs-app.tar.gz ubuntu@18.216.35.63:~
+
                     '''
                 }
             }
