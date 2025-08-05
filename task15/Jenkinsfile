@@ -38,10 +38,9 @@ pipeline {
                         cd task15/
 
                         echo "Copying files to EC2..."
-                        scp -o StrictHostKeyChecking=no ./nodejs-app.tar.gz ubuntu@18.216.35.63:~
+                        scp -o StrictHostKeyChecking=no ./deploy.sh ./nodejs-app.tar.gz ubuntu@18.216.35.63:~
 
-                        pwd
-                        ssh -o StrictHostKeyChecking=no ubuntu@18.216.35.63 'bash ./deploy.sh'
+                        ssh -o StrictHostKeyChecking=no ubuntu@18.216.35.63 'bash deploy.sh'
                     '''
                 }
             }
