@@ -39,7 +39,7 @@ resource "aws_instance" "haider-tf-nodejs-ec2" {
   key_name                    = var.nodejs_ec2_key
   vpc_security_group_ids      = [var.security_group_id]
   associate_public_ip_address = true
-  #  user_data                   = file("${path.root}/jenkins_agent.sh")
+  user_data                   = file("${path.root}/node_ec2.sh")
 
   metadata_options {
     http_endpoint = "enabled"

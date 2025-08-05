@@ -1,3 +1,5 @@
 #!/bin/bash
 
-touch test.txt
+tar -xvzf nodejs-app.tar.gz
+
+pm2 start server.js
