@@ -20,7 +20,7 @@ pipeline {
                     npm install
 
                     echo "Creating artifact for deployment..."
-                    tar -cvzf nodejs-app.tar.gz ./*
+                    tar -cvzf ../nodejs-app.tar.gz ./*
 
                     ls -la
                 '''
