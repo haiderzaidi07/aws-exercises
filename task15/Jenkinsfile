@@ -27,5 +27,15 @@ pipeline {
                 '''
             }
         }
+
+        stage('Deploy') {
+            steps {
+                sshagent(['nodejs-deployment-ec2']) {
+                    sh '''
+                        pwd
+                    '''
+                }
+            }
+        }
     }
 }

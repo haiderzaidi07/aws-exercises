@@ -31,3 +31,22 @@ resource "aws_instance" "haider-tf-jenkins-agent" {
     Name = "haider-tf-jenkins-agent"
   }
 }
+
+resource "aws_instance" "haider-tf-nodejs-ec2" {
+  ami                         = data.aws_ami.ubuntu.id
+  instance_type               = var.instance_type
+  subnet_id                   = var.subnet_id
+  key_name                    = var.nodejs_ec2_key
+  vpc_security_group_ids      = [var.security_group_id]
+  associate_public_ip_address = true
+  #  user_data                   = file("${path.root}/jenkins_agent.sh")
+
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+  }
+
+  tags = {
+    Name = "haider-tf-nodejs-ec2"
+  }
+}
