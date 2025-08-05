@@ -14,7 +14,6 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''
-                    set -e
                     cd task15/app/
 
                     echo "Install Dependencies..."
