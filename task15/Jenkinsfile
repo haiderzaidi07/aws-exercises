@@ -21,17 +21,20 @@ pipeline {
 
                     echo "Creating artifact for deployment..."
                     tar -cvzf ../nodejs-app.tar.gz ./*
-
-                    ls -la
                 '''
             }
         }
 
         stage('Deploy') {
             steps {
+                sh '''
+                    cd task15/
+                    ls -la | grep nodejs-app.tar.gz
+                '''
+
                 sshagent(['nodejs-deployment-ec2']) {
                     sh '''
-                        pwd
+                        
                     '''
                 }
             }
