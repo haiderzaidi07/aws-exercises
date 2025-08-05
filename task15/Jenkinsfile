@@ -28,6 +28,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
+                    echo "Verifying if artifact is in workspace..."
                     cd task15/
                     ls -la | grep nodejs-app.tar.gz
                 '''
@@ -37,6 +38,7 @@ pipeline {
                         echo "Copying files to EC2..."
                         scp -o StrictHostKeyChecking=no ./task15/nodejs-app.tar.gz ubuntu@18.216.35.63:~
 
+                        ssh -o StrictHostKeyChecking=no ubuntu@18.216.35.63 'bash deploy.sh'
                     '''
                 }
             }
