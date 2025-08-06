@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        EC2_PUBLIC_IP = '3.145.157.7'
+    }
+
     stages {
         stage('Verify') {
             steps {
@@ -38,9 +42,9 @@ pipeline {
                         cd task15/
 
                         echo "Copying files to EC2..."
-                        scp -o StrictHostKeyChecking=no ./deploy.sh ./nodejs-app.tar.gz ubuntu@18.117.141.227:~
+                        scp -o StrictHostKeyChecking=no ./deploy.sh ./nodejs-app.tar.gz ubuntu@$EC2_PUBLIC_IP:~
 
-                        ssh -o StrictHostKeyChecking=no ubuntu@18.117.141.227 'bash deploy.sh'
+                        ssh -o StrictHostKeyChecking=no ubuntu@$EC2_PUBLIC_IP 'bash deploy.sh'
                     '''
                 }
             }
